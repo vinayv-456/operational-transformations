@@ -10,13 +10,29 @@ const Ot = (inputDoc, cursorPos, operations) => {
       operations.slice(1)
     );
   } else if (op === "delete") {
-    return Ot(
-      inputDoc.slice(0, cursorPos) + inputDoc.slice(cursorPos + count),
-      cursorPos,
-      operations.slice(1)
-    );
+    try {
+      if (cursorPos + count > inputDoc.length) {
+        throw new Error("delete past end");
+      }
+      return Ot(
+        inputDoc.slice(0, cursorPos) + inputDoc.slice(cursorPos + count),
+        cursorPos,
+        operations.slice(1)
+      );
+    } catch (e) {
+      console.log(e.message);
+      return e.message;
+    }
   } else if (op === "skip") {
-    return Ot(inputDoc, cursorPos + count, operations.slice(1));
+    try {
+      if (cursorPos + count > inputDoc.length) {
+        throw new Error("skip past end");
+      }
+      return Ot(inputDoc, cursorPos + count, operations.slice(1));
+    } catch (e) {
+      console.log(e.message);
+      return e.message;
+    }
   }
 };
 
