@@ -1,5 +1,33 @@
+const Ot = (inputDoc, cursorPos, operations) => {
+  if (operations.length == 0) {
+    return inputDoc;
+  }
+  const { op, chars, count } = operations[0];
+  if (op === "insert") {
+    return Ot(
+      inputDoc.slice(0, cursorPos) + chars + inputDoc.slice(cursorPos),
+      cursorPos + chars.length,
+      operations.slice(1)
+    );
+  } else if (op === "delete") {
+    return Ot(
+      inputDoc.slice(0, cursorPos) + inputDoc.slice(cursorPos + count),
+      cursorPos,
+      operations.slice(1)
+    );
+  } else if (op === "skip") {
+    return Ot(inputDoc, cursorPos + count, operations.slice(1));
+  }
+};
+
 function isValid(stale, latest, otjson) {
   // this is the part you will write!
+  // console.log("1", Ot(inputDoc, cursorPos, operations));
+  // console.log("2", latest);
+  // console.log(Ot(inputDoc, cursorPos, operations) === latest);
+  const res = Ot(stale, 0, JSON.parse(otjson)) === latest;
+  console.log(res);
+  return res;
 }
 
 isValid(
